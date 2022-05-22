@@ -13,7 +13,7 @@ const wallet = new Keypair();
 
 // retrive wallet's credentials
 
-const publicKey = new PublicKey(wallet._keypair.publicKey);
+const publicKey = new PublicKey(wallet._keypair.publicKey)
 const secretKey = wallet._keypair.secretKey;
 
 // console.log(publicKey);
@@ -34,11 +34,28 @@ const getWalletBalance = async()=> {
     }
 }
 
+// airdropping some Solana
+
+const airDropSol = async()=>{
+
+    try{
+            const connection = new Connection(clusterApiUrl('devnet'), 'confirmed');
+            const fromAirDropSignature = await connection.requestAirdrop(publicKey, 2*LAMPORTS_PER_SOL);
+            // console.log(fromAirDropSignature);
+            await connection.confirmTransaction(fromAirDropSignature);
+
+    }catch(err){
+        console.log(err);
+    }
+}
+
 // main function
 
 const main = async() => {
     await getWalletBalance();
+    await airDropSol();
+    await getWalletBalance();
+
 }
 
 main();
-getWalletBalance();
